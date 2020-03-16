@@ -29,6 +29,20 @@ public class SEntity implements Comparable<SEntity>{
         this.normalizedEntityValue = text;
     }
 
+    public SEntity(int charStart, int charEnd, List<SToken> tokens, String nerTag){
+        this.charStart = charStart;
+        this.charEnd = charEnd;
+
+        String nerText = "";
+        for (SToken t: tokens){
+            nerText += t.getToken();
+        }
+        this.text = nerText;
+
+        this.nerTag = nerTag;
+        this.normalizedEntityValue = text;
+    }
+
     public SEntity(int charStart, int charEnd, String token, String nerTag){
         this.charStart = charStart;
         this.charEnd = charEnd;
@@ -55,7 +69,8 @@ public class SEntity implements Comparable<SEntity>{
     }
 
     public int compareTo(SEntity target){
-        return (this.charEnd-this.charStart) - (target.charEnd - charStart);
+//        System.out.println(this.text+" compare entity:"+target.text);
+        return -(this.charEnd-this.charStart) + (target.charEnd - target.charStart);
     }
 
 }

@@ -46,7 +46,6 @@ public class RegexNER extends BaseEntityRecognizer {
         for (int i = 0; i<sTokenList.size(); i++){
             StringTokens.add(sTokenList.get(i).getToken());
         }
-        System.out.println(UtilFns.toJson(StringTokens));
         String sentence = UtilFns.join("",StringTokens);
 
         List<SEntity> hardEntities = hardMatch(sentence);
@@ -54,6 +53,15 @@ public class RegexNER extends BaseEntityRecognizer {
         else{ // 处理如果强匹配找到entity的情况
             List<SEntity> entityList = new LinkedList<>();
             for (SEntity entity : hardEntities){
+
+                if (entity.nerTag.length()<6){
+                    continue;
+                }
+
+                if (entity.nerTag.substring(0,6).equals("COMMON")){
+                    continue;
+                }
+
                 int charCounter = 0;
                 boolean startChecker=false, endChecker=false;
                 Map<Integer, SToken> tokenMap = new HashMap<>();
@@ -80,18 +88,6 @@ public class RegexNER extends BaseEntityRecognizer {
             return entityList;
         }
 
-//        for (int i = 0; i<sTokenList.size(); i++){
-//            String token = sTokenList.get(i).getToken();  // 对每一个token进行match
-//            List<SDictionary.MatchResult> matches = SmoothNLP.DICTIONARIES.find(token,this.libraryNames);
-//            if (matches.size()==1){
-//                SDictionary.MatchResult match = matches.get(0);
-//                if (match.end - match.start==token.length()){
-//                    entityList.add(new SEntity(charCounter,charCounter+token.length(),token,match.label));
-//                }
-//            }
-//            charCounter+=token.length();
-//        }
-//        return entityList;
     };
 
     public List<SEntity> process(String inputText){
